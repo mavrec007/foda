@@ -16,8 +16,8 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 const translations = {
   ar: {
     // Header & Navigation
-    'app.title': 'فحصان',
-    'app.subtitle': 'نظام إدارة الحملات',
+    'app.title': 'فودا',
+    'app.subtitle': 'نظام إدارة الحملات المتطور',
     'nav.dashboard': 'لوحة التحكم',
     'nav.campaigns': 'الحملات',
     'nav.teams': 'الفرق',
@@ -34,7 +34,7 @@ const translations = {
     'language.english': 'English',
     
     // Dashboard
-    'dashboard.welcome': 'مرحباً بك في فحصان',
+    'dashboard.welcome': 'مرحباً بك في فودا',
     'dashboard.subtitle': 'إدارة حملاتك بكفاءة',
     'dashboard.total_campaigns': 'إجمالي الحملات',
     'dashboard.active_campaigns': 'الحملات النشطة',
@@ -71,8 +71,8 @@ const translations = {
   },
   en: {
     // Header & Navigation
-    'app.title': 'Fahsan',
-    'app.subtitle': 'Campaign Management System',
+    'app.title': 'Foda',
+    'app.subtitle': 'Advanced Campaign Management System',
     'nav.dashboard': 'Dashboard',
     'nav.campaigns': 'Campaigns',
     'nav.teams': 'Teams',
@@ -89,7 +89,7 @@ const translations = {
     'language.english': 'English',
     
     // Dashboard
-    'dashboard.welcome': 'Welcome to Fahsan',
+    'dashboard.welcome': 'Welcome to Foda',
     'dashboard.subtitle': 'Manage your campaigns efficiently',
     'dashboard.total_campaigns': 'Total Campaigns',
     'dashboard.active_campaigns': 'Active Campaigns',
