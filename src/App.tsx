@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { Dashboard } from "./pages/Dashboard";
 import { Campaigns } from "./pages/Campaigns";
+import { CampaignReports } from "./pages/CampaignReports";
 import { Teams } from "./pages/Teams";
 import { Analytics } from "./pages/Analytics";
 import { Settings } from "./pages/Settings";
@@ -27,6 +28,7 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/campaigns" element={<Campaigns />} />
+                <Route path="/campaigns/reports" element={<CampaignReports />} />
                 <Route path="/campaigns/*" element={<Campaigns />} />
                 <Route path="/teams" element={<Teams />} />
                 <Route path="/teams/*" element={<Teams />} />

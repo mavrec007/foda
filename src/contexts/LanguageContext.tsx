@@ -55,6 +55,15 @@ const translations = {
     'teams.create': 'إنشاء فريق جديد',
     'teams.members': 'الأعضاء',
     'teams.add_member': 'إضافة عضو',
+    'teams.roles': 'الأدوار والصلاحيات',
+    
+    // Analytics & Reports
+    'analytics.title': 'التحليلات والتقارير',
+    'analytics.performance': 'تحليل الأداء',
+    'analytics.reports': 'التقارير المفصلة',
+    'analytics.data': 'إدارة البيانات',
+    'campaigns.reports': 'تقارير الحملات',
+    'campaigns.schedule': 'جدولة الحملات',
     
     // Common
     'common.save': 'حفظ',
@@ -68,6 +77,8 @@ const translations = {
     'common.loading': 'جارٍ التحميل...',
     'common.success': 'تم بنجاح',
     'common.error': 'حدث خطأ',
+    'common.view': 'عرض',
+    'common.details': 'التفاصيل',
   },
   en: {
     // Header & Navigation
@@ -108,8 +119,17 @@ const translations = {
     // Teams
     'teams.title': 'Team Management',
     'teams.create': 'Create New Team',
-    'teams.members': 'Members',
+    'teams.members': 'Team Members',
     'teams.add_member': 'Add Member',
+    'teams.roles': 'Roles & Permissions',
+    
+    // Analytics & Reports
+    'analytics.title': 'Analytics & Reports',
+    'analytics.performance': 'Performance Analysis',
+    'analytics.reports': 'Detailed Reports',
+    'analytics.data': 'Data Management',
+    'campaigns.reports': 'Campaign Reports',
+    'campaigns.schedule': 'Campaign Scheduling',
     
     // Common
     'common.save': 'Save',
@@ -123,6 +143,8 @@ const translations = {
     'common.loading': 'Loading...',
     'common.success': 'Success',
     'common.error': 'Error',
+    'common.view': 'View',
+    'common.details': 'Details',
   }
 };
 

@@ -4,66 +4,72 @@
 @tailwind components;
 @tailwind utilities;
 
-/* FAHSAN Design System - Glassmorphism with Neon Accents */
+/* FODA Design System - Advanced Glassmorphism with Professional 3D Effects */
 
 @layer base {
   :root {
-    /* Primary Colors - Neon Blue & Orange */
-    --neon-blue: 200 100% 60%;
-    --neon-blue-glow: 200 100% 70%;
-    --neon-orange: 25 100% 60%;
-    --neon-orange-glow: 25 100% 70%;
+    /* Foda Brand Colors - Professional Blue & Orange */
+    --neon-blue: 220 100% 65%;
+    --neon-blue-bright: 220 100% 75%;
+    --neon-blue-glow: 220 100% 65% / 0.4;
+    --neon-orange: 25 100% 65%;
+    --neon-orange-bright: 25 100% 75%;
+    --neon-orange-glow: 25 100% 65% / 0.4;
     
-    /* Glassmorphism Base Colors */
-    --glass-light: 0 0% 100%;
-    --glass-light-secondary: 220 14% 96%;
-    --glass-dark: 220 13% 8%;
-    --glass-dark-secondary: 220 13% 12%;
+    /* Enhanced Glassmorphism */
+    --glass-light: 0 0% 100% / 0.08;
+    --glass-light-secondary: 220 14% 96% / 0.1;
+    --glass-dark: 220 13% 8% / 0.12;
+    --glass-dark-secondary: 220 13% 12% / 0.15;
     
-    /* Light Theme */
-    --background: 220 20% 97%;
-    --background-secondary: 220 14% 94%;
-    --background-gradient: linear-gradient(135deg, hsl(220 20% 97%) 0%, hsl(210 25% 92%) 100%);
+    /* Professional Light Theme */
+    --background: 220 25% 97%;
+    --background-secondary: 220 20% 94%;
+    --background-gradient: linear-gradient(135deg, hsl(220 25% 97%) 0%, hsl(210 30% 92%) 50%, hsl(200 25% 90%) 100%);
+    --background-pattern: radial-gradient(circle at 25% 25%, hsl(220 100% 65% / 0.02) 0%, transparent 50%);
     
-    --foreground: 220 13% 9%;
-    --foreground-secondary: 220 9% 20%;
+    --foreground: 220 15% 12%;
+    --foreground-secondary: 220 12% 25%;
     
-    --card: 0 0% 100%;
-    --card-foreground: 220 13% 9%;
-    --card-glass: 0 0% 100% / 0.7;
-    --card-border: 220 13% 91% / 0.5;
+    --card: 0 0% 100% / 0.85;
+    --card-foreground: 220 15% 12%;
+    --card-glass: 0 0% 100% / 0.75;
+    --card-border: 220 13% 91% / 0.6;
+    --card-shadow: 0 8px 32px hsl(220 15% 12% / 0.08);
     
     --popover: 0 0% 100% / 0.95;
-    --popover-foreground: 220 13% 9%;
+    --popover-foreground: 220 15% 12%;
     
-    --primary: 200 100% 60%;
+    --primary: 220 100% 65%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 200 100% 60% / 0.3;
+    --primary-glow: 220 100% 65% / 0.35;
+    --primary-shadow: 0 0 30px hsl(220 100% 65% / 0.3);
     
-    --secondary: 25 100% 60%;
+    --secondary: 25 100% 65%;
     --secondary-foreground: 0 0% 100%;
-    --secondary-glow: 25 100% 60% / 0.3;
+    --secondary-glow: 25 100% 65% / 0.35;
+    --secondary-shadow: 0 0 30px hsl(25 100% 65% / 0.3);
     
-    --muted: 220 14% 96% / 0.8;
-    --muted-foreground: 220 9% 46%;
+    --muted: 220 18% 95% / 0.8;
+    --muted-foreground: 220 12% 48%;
     
-    --accent: 200 100% 95%;
-    --accent-foreground: 200 100% 20%;
+    --accent: 220 100% 96%;
+    --accent-foreground: 220 100% 25%;
     
-    --destructive: 0 84% 60%;
+    --destructive: 0 85% 62%;
     --destructive-foreground: 0 0% 100%;
     
-    --border: 220 13% 91% / 0.5;
-    --input: 0 0% 100% / 0.7;
-    --input-border: 220 13% 91% / 0.8;
-    --ring: 200 100% 60%;
+    --border: 220 15% 88% / 0.6;
+    --input: 0 0% 100% / 0.8;
+    --input-border: 220 15% 85% / 0.8;
+    --ring: 220 100% 65%;
     
-    --success: 142 76% 36%;
-    --warning: 38 92% 50%;
-    --info: 200 100% 60%;
+    --success: 142 78% 45%;
+    --warning: 38 95% 58%;
+    --info: 220 100% 65%;
     
-    --sidebar-glass: 0 0% 100% / 0.8;
-    --header-glass: 0 0% 100% / 0.9;
+    --sidebar-glass: 0 0% 100% / 0.85;
+    --header-glass: 0 0% 100% / 0.92;
     
     --radius: 0.75rem;
     --radius-lg: 1rem;

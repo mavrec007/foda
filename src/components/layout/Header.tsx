@@ -40,11 +40,12 @@ export const Header: React.FC<HeaderProps> = ({ onSidebarToggle }) => {
         </Button>
         
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm">
-            ف
+          <div className="relative h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-sm transition-all duration-300 hover:scale-110 hover:rotate-3 animate-pulse-glow group">
+            <span className="text-sm font-bold transition-transform group-hover:scale-110">ف</span>
+            <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-primary to-secondary opacity-20 blur-sm group-hover:opacity-40 transition-opacity"></div>
           </div>
           <div className="hidden sm:block">
-            <h1 className={`text-lg font-bold text-foreground ${language === 'ar' ? 'font-arabic-heading' : ''}`}>
+            <h1 className={`text-lg font-bold text-foreground transition-colors hover:text-primary ${language === 'ar' ? 'font-arabic-heading' : ''}`}>
               {t('app.title')}
             </h1>
             <p className={`text-xs text-muted-foreground ${language === 'ar' ? 'font-arabic' : ''}`}>
