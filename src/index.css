@@ -1,42 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* FAHSAN Design System - Glassmorphism with Neon Accents */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-
+    /* Primary Colors - Neon Blue & Orange */
+    --neon-blue: 200 100% 60%;
+    --neon-blue-glow: 200 100% 70%;
+    --neon-orange: 25 100% 60%;
+    --neon-orange-glow: 25 100% 70%;
+    
+    /* Glassmorphism Base Colors */
+    --glass-light: 0 0% 100%;
+    --glass-light-secondary: 220 14% 96%;
+    --glass-dark: 220 13% 8%;
+    --glass-dark-secondary: 220 13% 12%;
+    
+    /* Light Theme */
+    --background: 220 20% 97%;
+    --background-secondary: 220 14% 94%;
+    --background-gradient: linear-gradient(135deg, hsl(220 20% 97%) 0%, hsl(210 25% 92%) 100%);
+    
+    --foreground: 220 13% 9%;
+    --foreground-secondary: 220 9% 20%;
+    
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
-
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
-
-    --radius: 0.5rem;
+    --card-foreground: 220 13% 9%;
+    --card-glass: 0 0% 100% / 0.7;
+    --card-border: 220 13% 91% / 0.5;
+    
+    --popover: 0 0% 100% / 0.95;
+    --popover-foreground: 220 13% 9%;
+    
+    --primary: 200 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 200 100% 60% / 0.3;
+    
+    --secondary: 25 100% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-glow: 25 100% 60% / 0.3;
+    
+    --muted: 220 14% 96% / 0.8;
+    --muted-foreground: 220 9% 46%;
+    
+    --accent: 200 100% 95%;
+    --accent-foreground: 200 100% 20%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 13% 91% / 0.5;
+    --input: 0 0% 100% / 0.7;
+    --input-border: 220 13% 91% / 0.8;
+    --ring: 200 100% 60%;
+    
+    --success: 142 76% 36%;
+    --warning: 38 92% 50%;
+    --info: 200 100% 60%;
+    
+    --sidebar-glass: 0 0% 100% / 0.8;
+    --header-glass: 0 0% 100% / 0.9;
+    
+    --radius: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,41 +87,50 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Dark Theme - Night Mode */
+    --background: 220 13% 8%;
+    --background-secondary: 220 13% 12%;
+    --background-gradient: linear-gradient(135deg, hsl(220 13% 8%) 0%, hsl(220 20% 12%) 100%);
+    
+    --foreground: 0 0% 95%;
+    --foreground-secondary: 220 9% 80%;
+    
+    --card: 220 13% 12%;
+    --card-foreground: 0 0% 95%;
+    --card-glass: 220 13% 12% / 0.8;
+    --card-border: 220 13% 25% / 0.5;
+    
+    --popover: 220 13% 12% / 0.95;
+    --popover-foreground: 0 0% 95%;
+    
+    --primary: 200 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 200 100% 60% / 0.4;
+    
+    --secondary: 25 100% 60%;
+    --secondary-foreground: 0 0% 100%;
+    --secondary-glow: 25 100% 60% / 0.4;
+    
+    --muted: 220 13% 15% / 0.8;
+    --muted-foreground: 220 9% 60%;
+    
+    --accent: 200 100% 15%;
+    --accent-foreground: 200 100% 80%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 13% 25% / 0.5;
+    --input: 220 13% 12% / 0.8;
+    --input-border: 220 13% 25% / 0.8;
+    --ring: 200 100% 60%;
+    
+    --success: 142 76% 50%;
+    --warning: 38 92% 60%;
+    --info: 200 100% 60%;
+    
+    --sidebar-glass: 220 13% 12% / 0.9;
+    --header-glass: 220 13% 12% / 0.9;
   }
 }
 
@@ -99,7 +139,117 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter antialiased;
+    background: var(--background-gradient);
+    min-height: 100vh;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Arabic Typography */
+  .font-arabic {
+    font-family: 'Cairo', 'Segoe UI', system-ui, sans-serif;
+  }
+
+  .font-arabic-heading {
+    font-family: 'Amiri', 'Times New Roman', serif;
+  }
+
+  /* English Typography */
+  .font-inter {
+    font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  }
+
+  /* RTL Support */
+  [dir="rtl"] {
+    text-align: right;
+  }
+
+  [dir="rtl"] .rtl-flip {
+    transform: scaleX(-1);
+  }
+
+  /* Glassmorphism Effects */
+  .glass {
+    background: hsl(var(--card-glass));
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid hsl(var(--card-border));
+  }
+
+  .glass-header {
+    background: hsl(var(--header-glass));
+    backdrop-filter: blur(16px) saturate(200%);
+    -webkit-backdrop-filter: blur(16px) saturate(200%);
+    border-bottom: 1px solid hsl(var(--border));
+  }
+
+  .glass-sidebar {
+    background: hsl(var(--sidebar-glass));
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-right: 1px solid hsl(var(--border));
+  }
+
+  /* Neon Glow Effects */
+  .neon-glow-blue {
+    box-shadow: 0 0 20px hsl(var(--primary-glow)), 
+                0 0 40px hsl(var(--primary-glow)),
+                0 0 80px hsl(var(--primary-glow));
+  }
+
+  .neon-glow-orange {
+    box-shadow: 0 0 20px hsl(var(--secondary-glow)), 
+                0 0 40px hsl(var(--secondary-glow)),
+                0 0 80px hsl(var(--secondary-glow));
+  }
+
+  /* Smooth Transitions */
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .transition-glow {
+    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  /* Loading Animation */
+  @keyframes pulse-glow {
+    0%, 100% {
+      opacity: 1;
+      box-shadow: 0 0 20px hsl(var(--primary-glow));
+    }
+    50% {
+      opacity: 0.8;
+      box-shadow: 0 0 40px hsl(var(--primary-glow)), 0 0 80px hsl(var(--primary-glow));
+    }
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--primary));
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--primary-glow));
   }
 }
