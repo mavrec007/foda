@@ -1,223 +1,186 @@
-import React from 'react';
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { NavLink, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Megaphone, 
-  Users, 
-  BarChart3, 
-  Settings, 
-  ChevronDown,
-  Target,
-  Calendar,
-  FileText,
-  Database
+import {
+  LayoutDashboard,
+  Vote,
+  MapPin,
+  Users,
+  UserCheck,
+  Crown,
+  Shield,
+  Heart,
+  Eye,
+  Megaphone,
+  BarChart3,
+  Settings,
+  ChevronLeft,
+  ChevronRight,
+  Menu
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
 import { useLanguage } from '@/contexts/LanguageContext';
 
-interface SidebarProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface NavigationItem {
+  key: string;
+  icon: any;
+  path: string;
 }
 
-const menuItems = [
-  {
-    key: 'dashboard',
-    icon: LayoutDashboard,
-    path: '/',
-    badge: null,
-  },
-  {
-    key: 'campaigns',
-    icon: Megaphone,
-    path: '/campaigns',
-    badge: 5,
-    children: [
-      { key: 'campaigns.create', path: '/campaigns/create', icon: Target },
-      { key: 'campaigns.schedule', path: '/campaigns/schedule', icon: Calendar },
-      { key: 'campaigns.reports', path: '/campaigns/reports', icon: FileText },
-    ]
-  },
-  {
-    key: 'teams',
-    icon: Users,
-    path: '/teams',
-    badge: null,
-    children: [
-      { key: 'teams.members', path: '/teams/members', icon: Users },
-      { key: 'teams.roles', path: '/teams/roles', icon: Settings },
-    ]
-  },
-  {
-    key: 'analytics',
-    icon: BarChart3,
-    path: '/analytics',
-    badge: null,
-    children: [
-      { key: 'analytics.performance', path: '/analytics/performance', icon: BarChart3 },
-      { key: 'analytics.reports', path: '/analytics/reports', icon: FileText },
-      { key: 'analytics.data', path: '/analytics/data', icon: Database },
-    ]
-  },
-  {
-    key: 'settings',
-    icon: Settings,
-    path: '/settings',
-    badge: null,
-  },
+const navigationItems: NavigationItem[] = [
+  { key: 'dashboard', icon: LayoutDashboard, path: '/' },
+  { key: 'elections', icon: Vote, path: '/elections' },
+  { key: 'geo_areas', icon: MapPin, path: '/geo-areas' },
+  { key: 'committees', icon: Users, path: '/committees' },
+  { key: 'voters', icon: UserCheck, path: '/voters' },
+  { key: 'candidates', icon: Crown, path: '/candidates' },
+  { key: 'agents', icon: Shield, path: '/agents' },
+  { key: 'volunteers', icon: Heart, path: '/volunteers' },
+  { key: 'observations', icon: Eye, path: '/observations' },
+  { key: 'campaigns', icon: Megaphone, path: '/campaigns' },
+  { key: 'analytics', icon: BarChart3, path: '/analytics' },
+  { key: 'settings', icon: Settings, path: '/settings' },
 ];
 
-export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+export const Sidebar = () => {
+  const { t } = useTranslation();
   const location = useLocation();
-  const { direction, language, t } = useLanguage();
-  const [openItems, setOpenItems] = React.useState<string[]>(['campaigns']);
+  const { direction } = useLanguage();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const toggleItem = (key: string) => {
-    setOpenItems(prev => 
-      prev.includes(key) 
-        ? prev.filter(item => item !== key)
-        : [...prev, key]
-    );
-  };
-
-  const isActiveRoute = (path: string) => {
-    if (path === '/') return location.pathname === '/';
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return location.pathname === '/';
+    }
     return location.pathname.startsWith(path);
   };
 
-  const isParentActive = (item: any) => {
-    if (isActiveRoute(item.path)) return true;
-    if (item.children) {
-      return item.children.some((child: any) => isActiveRoute(child.path));
-    }
-    return false;
+  const toggleSidebar = () => {
+    setIsCollapsed(!isCollapsed);
   };
 
-  const SidebarContent = () => (
-    <nav className="flex-1 p-4 space-y-2">
-      {menuItems.map((item) => {
-        const Icon = item.icon;
-        const isActive = isParentActive(item);
-        const isOpen = openItems.includes(item.key);
-
-        if (item.children) {
-          return (
-            <Collapsible
-              key={item.key}
-              open={isOpen}
-              onOpenChange={() => toggleItem(item.key)}
-            >
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className={`w-full justify-between transition-glow ${
-                    isActive 
-                      ? 'bg-primary/10 text-primary neon-glow-blue' 
-                      : 'hover:bg-muted/50 hover:neon-glow-orange'
-                  } ${direction === 'rtl' ? 'flex-row-reverse' : ''}`}
-                >
-                  <div className={`flex items-center gap-3 ${direction === 'rtl' ? 'flex-row-reverse' : ''}`}>
-                    <Icon className="h-5 w-5" />
-                    <span className={language === 'ar' ? 'font-arabic' : ''}>
-                      {t(`nav.${item.key}`)}
-                    </span>
-                    {item.badge && (
-                      <Badge variant="secondary" className="ml-auto">
-                        {item.badge}
-                      </Badge>
-                    )}
-                  </div>
-                  <ChevronDown 
-                    className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''} ${
-                      direction === 'rtl' ? 'rtl-flip' : ''
-                    }`} 
-                  />
-                </Button>
-              </CollapsibleTrigger>
-              <CollapsibleContent className="space-y-1 ml-6 mt-1">
-                {item.children.map((child) => {
-                  const ChildIcon = child.icon;
-                  const isChildActive = isActiveRoute(child.path);
-                  
-                  return (
-                    <NavLink
-                      key={child.key}
-                      to={child.path}
-                      onClick={onClose}
-                      className={({ isActive: navIsActive }) =>
-                        `flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-glow ${
-                          navIsActive || isChildActive
-                            ? 'bg-secondary/20 text-secondary neon-glow-orange'
-                            : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
-                        } ${direction === 'rtl' ? 'flex-row-reverse' : ''}`
-                      }
-                    >
-                      <ChildIcon className="h-4 w-4" />
-                      <span className={language === 'ar' ? 'font-arabic' : ''}>
-                        {t(child.key)}
-                      </span>
-                    </NavLink>
-                  );
-                })}
-              </CollapsibleContent>
-            </Collapsible>
-          );
-        }
-
-        return (
-          <NavLink
-            key={item.key}
-            to={item.path}
-            onClick={onClose}
-            className={({ isActive: navIsActive }) =>
-              `flex items-center gap-3 px-4 py-3 rounded-lg transition-glow ${
-                navIsActive || isActive
-                  ? 'bg-primary/10 text-primary neon-glow-blue'
-                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground hover:neon-glow-orange'
-              } ${direction === 'rtl' ? 'flex-row-reverse' : ''}`
-            }
-          >
-            <Icon className="h-5 w-5" />
-            <span className={`flex-1 ${language === 'ar' ? 'font-arabic' : ''}`}>
-              {t(`nav.${item.key}`)}
-            </span>
-            {item.badge && (
-              <Badge variant="secondary">
-                {item.badge}
-              </Badge>
-            )}
-          </NavLink>
-        );
-      })}
-    </nav>
-  );
-
   return (
-    <>
-      {/* Mobile Overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
-          onClick={onClose}
-        />
-      )}
-      
-      {/* Sidebar */}
-      <aside className={`
-        fixed top-16 ${direction === 'rtl' ? 'right-0' : 'left-0'} h-[calc(100vh-4rem)] w-64 z-50
-        glass-sidebar transition-transform duration-300 ease-in-out
-        ${isOpen ? 'translate-x-0' : direction === 'rtl' ? 'translate-x-full' : '-translate-x-full'}
-        lg:relative lg:top-0 lg:h-screen lg:translate-x-0
-        flex flex-col
-      `}>
-        <SidebarContent />
-      </aside>
-    </>
+    <motion.aside
+      initial={{ x: direction === 'rtl' ? 100 : -100, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className={`
+        glass-card rounded-none border-y-0 border-l-0 
+        flex flex-col h-screen sticky top-0 z-50
+        transition-all duration-300 ease-in-out
+        ${isCollapsed ? 'w-16' : 'w-64'}
+        ${direction === 'rtl' ? 'border-r border-l-0' : 'border-r border-l-0'}
+      `}
+    >
+      {/* Header */}
+      <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
+        <AnimatePresence>
+          {!isCollapsed && (
+            <motion.div
+              initial={{ opacity: 0, x: direction === 'rtl' ? 20 : -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: direction === 'rtl' ? 20 : -20 }}
+              className="flex items-center gap-3"
+            >
+              <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+                <Vote className="h-5 w-5 text-white" />
+              </div>
+              <span className="font-bold text-lg text-gradient-primary">
+                ElectionCircle
+              </span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={toggleSidebar}
+          className="glass-button p-2"
+        >
+          {isCollapsed ? (
+            direction === 'rtl' ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />
+          ) : (
+            direction === 'rtl' ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />
+          )}
+        </Button>
+      </div>
+
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto custom-scrollbar p-4">
+        <ul className="space-y-2">
+          {navigationItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+            
+            return (
+              <motion.li
+                key={item.key}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <NavLink
+                  to={item.path}
+                  className={`
+                    flex items-center gap-3 px-3 py-2.5 rounded-lg
+                    transition-all duration-200 group relative
+                    ${active 
+                      ? 'bg-gradient-primary text-white shadow-glow' 
+                      : 'hover:bg-white/10 text-foreground hover:text-primary'
+                    }
+                    ${isCollapsed ? 'justify-center' : ''}
+                  `}
+                >
+                  <Icon className={`h-5 w-5 ${active ? 'animate-glow-pulse' : ''}`} />
+                  
+                  <AnimatePresence>
+                    {!isCollapsed && (
+                      <motion.span
+                        initial={{ opacity: 0, x: direction === 'rtl' ? 20 : -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: direction === 'rtl' ? 20 : -20 }}
+                        className="font-medium"
+                      >
+                        {t(`navigation.${item.key}`)}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Tooltip for collapsed state */}
+                  {isCollapsed && (
+                    <div className={`
+                      absolute ${direction === 'rtl' ? 'right-full mr-2' : 'left-full ml-2'} 
+                      top-1/2 transform -translate-y-1/2
+                      bg-foreground text-background px-2 py-1 rounded text-sm
+                      opacity-0 group-hover:opacity-100 transition-opacity
+                      pointer-events-none whitespace-nowrap z-50
+                    `}>
+                      {t(`navigation.${item.key}`)}
+                    </div>
+                  )}
+                </NavLink>
+              </motion.li>
+            );
+          })}
+        </ul>
+      </nav>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-white/10">
+        <AnimatePresence>
+          {!isCollapsed && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-xs text-muted-foreground text-center"
+            >
+              ElectionCircle v2.0
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </motion.aside>
   );
 };
