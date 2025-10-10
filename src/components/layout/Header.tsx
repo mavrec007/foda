@@ -1,5 +1,5 @@
-import { motion } from 'framer-motion';
-import { Moon, Sun, Bell, Globe, User, Menu } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Moon, Sun, Bell, Globe, User, Menu, Vote } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -16,7 +16,7 @@ interface HeaderProps {
 
 export const Header = ({ onToggleSidebar }: HeaderProps) => {
   const { theme, toggleTheme } = useTheme();
-  const { language, toggleLanguage, direction } = useLanguage();
+  const { language, toggleLanguage, direction, t } = useLanguage();
   const { unreadCount } = useNotifications();
   const { user } = useAuth();
   const { width } = useWindowSize();
@@ -32,12 +32,29 @@ export const Header = ({ onToggleSidebar }: HeaderProps) => {
       className="glass-card sticky top-0 z-40 flex h-16 items-center justify-between px-4 md:px-6 border-x-0 border-t-0"
     >
       {/* Left Section */}
-      <div className={cn('flex items-center gap-2 flex-1', isRTL && 'flex-row-reverse')}>
+      <div className={cn('flex items-center gap-3 flex-1', isRTL && 'flex-row-reverse')}>
         {isMobile && (
           <Button variant="ghost" size="icon" className="glass-button" onClick={onToggleSidebar}>
             <Menu className="h-5 w-5" />
           </Button>
         )}
+        
+        {/* Logo for mobile */}
+        {isMobile && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}
+          >
+            <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-glow pulse-glow">
+              <Vote className="h-4 w-4 text-white" />
+            </div>
+            <span className="font-bold text-sm neon-text" style={{ color: 'hsl(var(--primary))' }}>
+              {t('app.name', { defaultValue: language === 'ar' ? 'فودا' : 'Foda' })}
+            </span>
+          </motion.div>
+        )}
+
         <div className="relative w-full max-w-md hidden sm:block">
           <Input
             placeholder="Search..."

@@ -112,11 +112,11 @@ export const Sidebar = ({ isMobileSidebarOpen = false, setMobileSidebarOpen }: S
                   exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
                   className={cn('flex items-center gap-3', isRTL && 'flex-row-reverse')}
                 >
-                  <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center shadow-glow">
                     <Vote className="h-5 w-5 text-white" />
                   </div>
-                  <span className="font-bold text-lg text-gradient-primary">
-                    {language === 'ar' ? 'إلكشن سيركل' : 'ElectionCircle'}
+                  <span className="font-bold text-lg neon-text" style={{ color: 'hsl(var(--primary))' }}>
+                    {t('app.name', { defaultValue: language === 'ar' ? 'فودا' : 'Foda' })}
                   </span>
                 </motion.div>
               )}
@@ -240,8 +240,8 @@ export const Sidebar = ({ isMobileSidebarOpen = false, setMobileSidebarOpen }: S
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex justify-between items-center mb-4">
-                  <h2 className="font-semibold text-lg">
-                    {language === 'ar' ? 'إلكشن سيركل' : 'ElectionCircle'}
+                  <h2 className="font-semibold text-lg neon-text" style={{ color: 'hsl(var(--primary))' }}>
+                    {t('app.name', { defaultValue: language === 'ar' ? 'فودا' : 'Foda' })}
                   </h2>
                   <Button variant="ghost" size="icon" onClick={() => setMobileSidebarOpen && setMobileSidebarOpen(false)}>
                     <X className="h-5 w-5" />
