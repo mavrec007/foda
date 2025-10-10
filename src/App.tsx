@@ -13,7 +13,7 @@ import NotFound from "@/pages/NotFound";
 import { Dashboard } from "@/modules/dashboard/Dashboard";
 import { ElectionsList } from "@/modules/elections/List";
 import { ElectionDetails } from "@/modules/elections/Details";
-import { GeoAreasList } from "@/modules/geo-areas/List";
+import { GeoAreasDashboard } from "@/modules/geo-areas/Dashboard";
 import { GeoAreaDetails } from "@/modules/geo-areas/Details";
 import { VotersList } from "@/modules/voters/List";
 import { VoterDetails } from "@/modules/voters/Details";
@@ -21,14 +21,16 @@ import { CandidatesList } from "@/modules/candidates/List";
 import { CandidateDetails } from "@/modules/candidates/Details";
 import { AgentsList } from "@/modules/agents/AgentsList";
 import { VolunteersList } from "@/modules/volunteers/VolunteersList";
+import { ZoneDashboard } from "@/modules/zones/ZoneDashboard";
 
 import { CommitteesList } from "@/modules/committees/List";
 import { CommitteeDetails } from "@/modules/committees/Details";
-import { Analytics } from "@/modules/analytics/Analytics";
 import { Settings } from "@/modules/settings/Settings";
 
 import { ObservationsList } from "@/modules/observations/ObservationsList";
 import { CampaignsList } from "@/modules/campaigns/CampaignsList";
+import { AutomationDashboard } from "@/modules/automation/AutomationDashboard";
+import { NotificationProvider } from "@/contexts/NotificationContext";
  
 
  
@@ -60,7 +62,7 @@ const App = () => (
 
                     <Route path="/elections" element={<ElectionsList />} />
                     <Route path="/elections/:id" element={<ElectionDetails />} />
-                    <Route path="/geo-areas" element={<GeoAreasList />} />
+                    <Route path="/geo-areas" element={<GeoAreasDashboard />} />
                     <Route path="/geo-areas/:id" element={<GeoAreaDetails />} />
                     <Route path="/committees" element={<CommitteesList />} />
                     <Route path="/committees/:id" element={<CommitteeDetails />} />
@@ -73,7 +75,9 @@ const App = () => (
 
                     <Route path="/observations" element={<ObservationsList />} />
                     <Route path="/campaigns" element={<CampaignsList />} />
+                    <Route path="/automation" element={<AutomationDashboard />} />
                     <Route path="/analytics" element={<ComingSoon module="Analytics" />} />
+                    <Route path="/zones/mansoura" element={<ZoneDashboard />} />
                     <Route path="/settings" element={<Settings />} />
 
                     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
@@ -90,9 +94,11 @@ const App = () => (
 );
 
 const MainLayoutWrapper = () => (
-  <MainLayout>
-    <Outlet />
-  </MainLayout>
+  <NotificationProvider>
+    <MainLayout>
+      <Outlet />
+    </MainLayout>
+  </NotificationProvider>
 );
 
 // Temporary component for modules under development

@@ -1,111 +1,91 @@
 import { motion } from 'framer-motion';
-import { useTranslation } from 'react-i18next';
-import { Moon, Sun, Globe, User, Bell, Search } from 'lucide-react';
+import { Moon, Sun, Bell, Globe, User, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { useNotifications } from '@/contexts/NotificationContext';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { cn } from '@/lib/utils';
+import { useWindowSize } from '@/hooks/use-window-size';
 
-export const Header = () => {
-  const { t } = useTranslation();
+interface HeaderProps {
+  onToggleSidebar: () => void;
+}
+
+export const Header = ({ onToggleSidebar }: HeaderProps) => {
   const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage, direction } = useLanguage();
-  const { logout } = useAuth();
-  const navigate = useNavigate();
+  const { unreadCount } = useNotifications();
+  const { user } = useAuth();
+  const { width } = useWindowSize();
+  const isMobile = width < 768;
+  const isRTL = direction === 'rtl';
 
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="glass-card rounded-none border-x-0 border-t-0 sticky top-0 z-40"
+      transition={{ duration: 0.3 }}
+      dir={direction}
+      className="glass-card sticky top-0 z-40 flex h-16 items-center justify-between px-4 md:px-6 border-x-0 border-t-0"
     >
-      <div className="flex items-center justify-between h-16 px-6">
-        {/* Search */}
-        <div className="flex items-center flex-1 max-w-md">
-          <div className="relative w-full">
-            <Search className={`absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground ${direction === 'rtl' ? 'right-3' : 'left-3'}`} />
-            <Input
-              placeholder={t('common.search')}
-              className={`glass border-0 ${direction === 'rtl' ? 'pr-10' : 'pl-10'}`}
-            />
-          </div>
-        </div>
-
-        {/* Right Side Controls */}
-        <div className="flex items-center gap-2">
-          {/* Language Toggle */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleLanguage}
-            className="glass-button"
-          >
-            <Globe className="h-4 w-4" />
-            <span className="ml-2 font-medium">
-              {language === 'ar' ? 'العربية' : 'English'}
-            </span>
+      {/* Left Section */}
+      <div className={cn('flex items-center gap-2 flex-1', isRTL && 'flex-row-reverse')}>
+        {isMobile && (
+          <Button variant="ghost" size="icon" className="glass-button" onClick={onToggleSidebar}>
+            <Menu className="h-5 w-5" />
           </Button>
-
-          {/* Theme Toggle */}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={toggleTheme}
-            className="glass-button"
-          >
-            {theme === 'light' ? (
-              <Moon className="h-4 w-4" />
-            ) : (
-              <Sun className="h-4 w-4" />
+        )}
+        <div className="relative w-full max-w-md hidden sm:block">
+          <Input
+            placeholder="Search..."
+            className={cn(
+              'glass pl-9 border-0 focus-visible:ring-0',
+              isRTL && 'text-right pr-9 pl-0'
             )}
-          </Button>
-
-          {/* Notifications */}
-          <Button
-            variant="ghost"
-            size="sm"
-            className="glass-button relative"
-          >
-            <Bell className="h-4 w-4" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-destructive rounded-full animate-pulse" />
-          </Button>
-
-          {/* User Menu */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="glass-button">
-                <User className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="glass-card border-white/20">
-              <DropdownMenuItem>
-                {t('settings.profile')}
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                {t('settings.title')}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                className="text-destructive"
-                onSelect={() => {
-                  logout();
-                  navigate('/login');
-                }}
-              >
-                {t('auth.logout')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          />
+          <Bell
+            className={cn(
+              'absolute top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground',
+              isRTL ? 'right-3' : 'left-3'
+            )}
+          />
         </div>
+      </div>
+
+      {/* Right Section */}
+      <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
+        <Button variant="ghost" size="icon" className="glass-button" onClick={toggleTheme}>
+          {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+        </Button>
+
+        <Button variant="ghost" size="icon" className="glass-button" onClick={toggleLanguage}>
+          <Globe className="h-4 w-4" />
+        </Button>
+
+        <Button variant="ghost" size="icon" className="glass-button relative">
+          <Bell className="h-4 w-4" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-white">
+              {unreadCount}
+            </span>
+          )}
+        </Button>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="glass-button">
+              <User className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="glass-card border-white/20">
+            <DropdownMenuItem>{user?.name ?? 'Profile'}</DropdownMenuItem>
+            <DropdownMenuItem>Settings</DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive">Logout</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </motion.header>
   );
