@@ -36,6 +36,7 @@ import { NotificationProvider } from "@/contexts/NotificationContext";
  
 import "@/i18n";
 import { AuthRedirect } from "./pages/AuthRedirect";
+import { NewLanding } from "./pages/NewLanding";
 
 const queryClient = new QueryClient();
 
@@ -49,12 +50,7 @@ const App = () => (
             <Sonner />
             <BrowserRouter>
               <Routes>
-                <Route
-  path="/"
-  element={
-    <AuthRedirect />
-  }
-/>
+                <Route path="/" element={<NewLanding />} />
                 <Route path="/login" element={<Login />} />
                 <Route element={<ProtectedRoute />}>
                   <Route element={<MainLayoutWrapper />}>
