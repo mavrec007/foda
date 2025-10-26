@@ -188,15 +188,5 @@
     "system": "System",
     "dark_mode": "Dark Mode",
     "light_mode": "Light Mode"
-  },
-  "auth": {
-    "login": "Login",
-    "logout": "Logout",
-    "username": "Username",
-    "email": "Email",
-    "email_invalid": "Please enter a valid email",
-    "password": "Password",
-    "remember_me": "Remember me",
-    "login_error": "Invalid credentials"
   }
 }
