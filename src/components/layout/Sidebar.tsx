@@ -71,8 +71,8 @@ export const Sidebar = ({ isMobileSidebarOpen = false, setMobileSidebarOpen }: S
   }, [language]);
 
   const availableRoles = useMemo(() => {
-    const rawRoles = user?.roleNames ?? user?.roles?.map((r) => r.name) ?? [];
-    return new Set(rawRoles.map((r) => r.toLowerCase()));
+    const rawRoles = user?.roles ?? [];
+    return new Set(rawRoles.map((r) => typeof r === 'string' ? r.toLowerCase() : r));
   }, [user]);
 
   const isActive = (path: string) => location.pathname.startsWith(path);

@@ -98,7 +98,7 @@ export const Header = ({ onToggleSidebar }: HeaderProps) => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="glass-card border-white/20">
-            <DropdownMenuItem>{user?.name ?? 'Profile'}</DropdownMenuItem>
+            <DropdownMenuItem>{user?.email ?? 'Profile'}</DropdownMenuItem>
             <DropdownMenuItem>Settings</DropdownMenuItem>
             <DropdownMenuItem className="text-destructive">Logout</DropdownMenuItem>
           </DropdownMenuContent>

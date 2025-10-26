@@ -1,15 +1,20 @@
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
-// مسار محمي يمنع الوصول دون تسجيل الدخول
 export const ProtectedRoute = () => {
-  const { token, user, loading } = useAuth();
+  const { session, loading } = useAuth();
 
   if (loading) {
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="glass-card p-8">
+          <div className="animate-pulse text-center">Loading...</div>
+        </div>
+      </div>
+    );
   }
 
-  if (!token || !user) {
+  if (!session) {
     return <Navigate to="/login" replace />;
   }
 

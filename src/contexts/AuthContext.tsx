@@ -7,70 +7,32 @@ import {
   useState,
   ReactNode,
 } from 'react';
-import api, { setAuthToken } from '@/lib/api';
+import { supabase } from '@/integrations/supabase/client';
+import type { User, Session } from '@supabase/supabase-js';
 
-interface Role {
-  id?: number;
-  name: string;
-  guard_name?: string;
-  [key: string]: unknown;
+interface Profile {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  avatar_url: string | null;
+  phone: string | null;
 }
 
-interface Permission {
-  id?: number;
-  name: string;
-  [key: string]: unknown;
-}
-
-export interface AuthUser {
-  id: number;
-  name: string;
-  email: string;
-  roles: Role[];
-  permissions?: Permission[];
-  roleNames: string[];
-  [key: string]: unknown;
+export interface AuthUser extends User {
+  profile?: Profile;
+  roles?: string[];
 }
 
 interface AuthContextType {
-  token: string | null;
+  session: Session | null;
   user: AuthUser | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  logout: () => Promise<void>;
-  refresh: () => Promise<AuthUser | null>;
+  signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName?: string) => Promise<{ error: Error | null }>;
+  signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-const getTokenFromStorage = () =>
-  (typeof window !== 'undefined' ? localStorage.getItem('token') : null);
-
-const normalizeUser = (payload: unknown): AuthUser => {
-  const raw =
-    (payload as Record<string, unknown>)?.data ??
-    (payload as Record<string, unknown>)?.user ??
-    payload;
-
-  if (!raw || typeof raw !== 'object') {
-    throw new Error('Invalid user payload received from API');
-  }
-
-  const rawRoles = Array.isArray((raw as Record<string, unknown>).roles)
-    ? ((raw as Record<string, unknown>).roles as Role[])
-    : [];
-
-  const roles = rawRoles.map((role) => ({
-    ...role,
-    name: String(role?.name ?? role),
-  }));
-
-  return {
-    ...(raw as Record<string, unknown>),
-    roles,
-    roleNames: roles.map((role) => role.name),
-  } as AuthUser;
-};
 
 export const useAuth = () => {
   const ctx = useContext(AuthContext);
@@ -85,149 +47,115 @@ interface Props {
 }
 
 export const AuthProvider = ({ children }: Props) => {
-  const [token, setToken] = useState<string | null>(() => getTokenFromStorage());
+  const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<AuthUser | null>(null);
-  const [isCheckingToken, setIsCheckingToken] = useState(true);
-  const [isFetchingUser, setIsFetchingUser] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    setAuthToken(token);
-  }, [token]);
+  // Fetch user profile and roles
+  const fetchUserData = useCallback(async (authUser: User) => {
+    try {
+      // Fetch profile
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', authUser.id)
+        .single();
 
-  const persistToken = useCallback((value: string | null) => {
-    if (typeof window === 'undefined') return;
-    if (value) {
-      localStorage.setItem('token', value);
-    } else {
-      localStorage.removeItem('token');
+      // Fetch roles
+      const { data: userRoles } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', authUser.id);
+
+      const roles = userRoles?.map((r) => r.role) || [];
+
+      setUser({
+        ...authUser,
+        profile: profile || undefined,
+        roles,
+      });
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      setUser(authUser as AuthUser);
     }
   }, []);
 
-  const clearSession = useCallback(() => {
-    setToken(null);
-    setUser(null);
-    persistToken(null);
-    setAuthToken(null);
-  }, [persistToken]);
-
-  const fetchUser = useCallback(
-    async (overrideToken?: string | null): Promise<AuthUser | null> => {
-      const activeToken =
-        overrideToken ?? token ?? getTokenFromStorage();
-
-      if (!activeToken) {
-        setUser(null);
-        return null;
-      }
-
-      setAuthToken(activeToken);
-      const response = await api.get('/me');
-      const nextUser = normalizeUser(response.data);
-      setUser(nextUser);
-      return nextUser;
-    },
-    [token],
-  );
-
-  const login = useCallback(
-    async (email: string, password: string) => {
-      setIsFetchingUser(true);
-      try {
-        const response = await api.post('/login', { email, password });
-        const body = response.data;
-        const newToken: string | undefined =
-          body?.token ||
-          body?.access_token ||
-          body?.data?.token ||
-          body?.data?.access_token;
-
-        if (!newToken) {
-          throw new Error('Missing token in login response');
-        }
-
-        setToken(newToken);
-        persistToken(newToken);
-        await fetchUser(newToken);
-      } catch (error) {
-        clearSession();
-        throw error;
-      } finally {
-        setIsFetchingUser(false);
-        setIsCheckingToken(false);
-      }
-    },
-    [clearSession, fetchUser, persistToken],
-  );
-
-  const logout = useCallback(async () => {
-    try {
-      await api.post('/logout');
-    } catch (error) {
-      console.error('Failed to revoke token during logout', error);
-    } finally {
-      clearSession();
-      setIsCheckingToken(false);
-    }
-  }, [clearSession]);
-
-  const refresh = useCallback(async () => {
-    if (!token) {
-      return null;
-    }
-    setIsFetchingUser(true);
-    try {
-      return await fetchUser();
-    } catch (error) {
-      clearSession();
-      throw error;
-    } finally {
-      setIsFetchingUser(false);
-    }
-  }, [clearSession, fetchUser, token]);
-
+  // Initialize auth state
   useEffect(() => {
-    let isMounted = true;
-
-    const bootstrap = async () => {
-      if (!token) {
-        if (isMounted) {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setSession(session);
+        if (session?.user) {
+          await fetchUserData(session.user);
+        } else {
           setUser(null);
-          setIsCheckingToken(false);
         }
-        return;
+        setLoading(false);
       }
+    );
 
-      setIsFetchingUser(true);
-      try {
-        await fetchUser(token);
-      } catch (error) {
-        console.error('Failed to bootstrap user session', error);
-        clearSession();
-      } finally {
-        if (isMounted) {
-          setIsFetchingUser(false);
-          setIsCheckingToken(false);
-        }
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session?.user) {
+        fetchUserData(session.user);
+      } else {
+        setLoading(false);
       }
-    };
+    });
 
-    bootstrap();
+    return () => subscription.unsubscribe();
+  }, [fetchUserData]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [clearSession, fetchUser, token]);
+  const signIn = useCallback(async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      return { error };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  }, []);
+
+  const signUp = useCallback(async (email: string, password: string, fullName?: string) => {
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            full_name: fullName || '',
+          },
+        },
+      });
+      return { error };
+    } catch (error) {
+      return { error: error as Error };
+    }
+  }, []);
+
+  const signOut = useCallback(async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+    setUser(null);
+  }, []);
 
   const value = useMemo<AuthContextType>(
     () => ({
-      token,
+      session,
       user,
-      loading: isCheckingToken || isFetchingUser,
-      login,
-      logout,
-      refresh,
+      loading,
+      signIn,
+      signUp,
+      signOut,
     }),
-    [isCheckingToken, isFetchingUser, login, logout, refresh, token, user],
+    [session, user, loading, signIn, signUp, signOut],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -7,10 +8,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { LoginForm } from "@/components/auth/LoginForm";
+import { AuthForm } from "@/components/auth/AuthForm";
 
 export default function LandingPage() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0c1023] via-[#101735] to-[#162048] text-white flex flex-col">
@@ -34,19 +36,12 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto bg-white text-black rounded-2xl shadow-xl p-6 md:p-10 text-center border-t-4 border-primary">
           <h3 className="text-xl md:text-2xl font-bold mb-2">هل لديك حساب بالفعل؟</h3>
           <p className="mb-4 text-sm text-muted-foreground">قم بتسجيل الدخول لمتابعة حملتك الانتخابية بكل احترافية</p>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button className="bg-blue-800 hover:bg-blue-900">
-                تسجيل الدخول الآن
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{t("auth.login")}</DialogTitle>
-              </DialogHeader>
-              <LoginForm />
-            </DialogContent>
-          </Dialog>
+          <Button 
+            className="bg-blue-800 hover:bg-blue-900"
+            onClick={() => navigate('/login')}
+          >
+            تسجيل الدخول الآن
+          </Button>
         </div>
       </section>
 

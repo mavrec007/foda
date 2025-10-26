@@ -1,10 +1,21 @@
-import { LoginForm } from '@/components/auth/LoginForm';
+import { AuthForm } from '@/components/auth/AuthForm';
+import { useAuth } from '@/contexts/AuthContext';
+import { Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-// Standalone login page that centers the login card
-export const Login = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
-    <LoginForm />
-  </div>
-);
+export const Login = () => {
+  const { session, loading } = useAuth();
+
+  // Redirect if already logged in
+  if (!loading && session) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <AuthForm />
+    </div>
+  );
+};
 
 export default Login;
